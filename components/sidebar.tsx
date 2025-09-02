@@ -10,7 +10,7 @@ interface SidebarProps {
   onToggle: () => void;
   onNewChat: () => void;
   chatHistory: Array<{ id: string; title: string; timestamp: Date }>;
-  currentChatId?: string;
+  currentChatId?: string | null;
   onSelectChat: (chatId: string) => void;
 }
 
