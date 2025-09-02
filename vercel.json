@@ -1,3 +1,8 @@
 {
-  "root": "nextjs-app"
+  "builds": [
+    {
+      "src": "nextjs-app/next.config.mjs",
+      "use": "@vercel/next"
+    }
+  ]
 }
