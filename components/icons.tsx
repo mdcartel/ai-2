@@ -1,6 +1,9 @@
-import { LucideProps } from 'lucide-react';
+interface IconProps {
+  size?: number;
+  className?: string;
+}
 
-export const MDIcon = ({ size = 16, className, ...props }: { size?: number; className?: string }) => (
+export const MDIcon = ({ size = 16, className, ...props }: IconProps) => (
   <div 
     className={`flex items-center justify-center font-bold text-xs ${className || ''}`}
     style={{ width: size, height: size }}
@@ -9,7 +12,7 @@ export const MDIcon = ({ size = 16, className, ...props }: { size?: number; clas
   </div>
 );
 
-export const PlusIcon = ({ size = 16, ...props }: LucideProps) => (
+export const PlusIcon = ({ size = 16, ...props }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -26,7 +29,7 @@ export const PlusIcon = ({ size = 16, ...props }: LucideProps) => (
   </svg>
 );
 
-export const MenuIcon = ({ size = 16, ...props }: LucideProps) => (
+export const MenuIcon = ({ size = 16, ...props }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -44,7 +47,7 @@ export const MenuIcon = ({ size = 16, ...props }: LucideProps) => (
   </svg>
 );
 
-export const ArrowUpIcon = ({ size = 16, ...props }: LucideProps) => (
+export const ArrowUpIcon = ({ size = 16, ...props }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -61,7 +64,7 @@ export const ArrowUpIcon = ({ size = 16, ...props }: LucideProps) => (
   </svg>
 );
 
-export const LoaderIcon = ({ size = 16, ...props }: LucideProps) => (
+export const LoaderIcon = ({ size = 16, ...props }: IconProps) => (
   <svg
     width={size}
     height={size}
