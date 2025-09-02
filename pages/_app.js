@@ -6,8 +6,8 @@ export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="dark"
+      enableSystem={false}
       disableTransitionOnChange
     >
       <Toaster position="top-center" />

@@ -1,17 +1,18 @@
-# AI Assistant
+# MD AI Assistant
 
-A modern, clean AI chatbot built with Next.js and the design system from the dezign components.
+A sleek, dark-themed AI chatbot built with Next.js and professional design components.
 
 ## Features
 
-- 🎨 Modern UI with Tailwind CSS and shadcn/ui components
-- 🌙 Dark/Light theme support
-- 📱 Fully responsive design
-- ⚡ Fast and optimized
-- 🔒 No authentication required
-- 🎭 Smooth animations with Framer Motion
-- 💬 Real-time chat interface
-- 📝 Markdown support for rich text responses
+- 🌙 **Dark Mode by Default** - Elegant dark theme for comfortable usage
+- 📱 **Responsive Sidebar** - Collapsible chat history with new chat functionality
+- 🎨 **Modern UI** - Built with Tailwind CSS and shadcn/ui components
+- 💬 **Chat Management** - Persistent chat history with easy navigation
+- ⚡ **Fast & Optimized** - Smooth performance and quick responses
+- 🔒 **No Authentication** - Instant access without any setup
+- 🎭 **Smooth Animations** - Polished interactions with Framer Motion
+- 📝 **Markdown Support** - Rich text rendering for AI responses
+- 🎯 **MD Branding** - Custom MD icon replacing generic sparkles
 
 ## Design System
 
