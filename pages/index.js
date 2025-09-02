@@ -1,10 +1,11 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const chatboxRef = useRef(null);
@@ -24,31 +25,32 @@ export default function Home() {
 
     const userMessage = { text: inputValue, isUser: true };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+    const currentInput = inputValue;
     setInputValue('');
     setIsLoading(true);
 
-    const apiUrl = inputValue.startsWith('/image')
-      ? 'https://backend.buildpicoapps.com/aero/run/image-generation-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ=='
-      : 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
+    // Simple API call without auth requirements
+    const apiUrl = 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
 
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: inputValue }),
+        body: JSON.stringify({ prompt: currentInput }),
       });
+      
       const data = await response.json();
 
-      if (data.status === 'success') {
+      if (data && data.text) {
         const assistantMessage = { text: data.text, isUser: false };
         setMessages((prevMessages) => [...prevMessages, assistantMessage]);
       } else {
-        const errorMessage = { text: 'An error occurred. Please try again.', isUser: false };
+        const errorMessage = { text: 'Sorry, I encountered an issue. Please try again.', isUser: false };
         setMessages((prevMessages) => [...prevMessages, errorMessage]);
       }
     } catch (error) {
       console.error('Error:', error);
-      const errorMessage = { text: 'An error occurred. Please try again.', isUser: false };
+      const errorMessage = { text: 'Connection error. Please check your internet and try again.', isUser: false };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -56,55 +58,78 @@ export default function Home() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const clearChat = () => {
+    setMessages([
+      { text: "Hello! I'm your AI assistant. How can I help you today?", isUser: false }
+    ]);
   };
 
   return (
     <>
       <Head>
-        <title>Chat Assistant</title>
+        <title>AI Assistant</title>
+        <meta name="description" content="Simple AI chatbot assistant" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <div className="header">
-        Chat Assistant
-        <div style={{ fontSize: '16px', marginTop: '10px' }}>
-          <Link href="/api-bot">API Bot</Link> | <Link href="/custom-bot">Custom Bot</Link>
-        </div>
-      </div>
-      <div className="container">
-        <div id="chatbox" className="chatbox" ref={chatboxRef}>
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`chat-message ${
-                message.isUser ? 'user-message' : 'assistant-message'
-              }`}
-            >
-              <ReactMarkdown>{message.text}</ReactMarkdown>
-            </div>
-          ))}
-        </div>
-        <div className="input-area">
-          <input
-            id="chatInput"
-            type="text"
-            placeholder="Type your message"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            disabled={isLoading}
-          />
-          <button id="sendButton" onClick={handleSendMessage} disabled={isLoading}>
-            {isLoading ? (
-              <div className="spinner" style={{display: 'block'}}></div>
-            ) : (
-              <>
-                <span className="material-icons">send</span> Send
-              </>
-            )}
+      
+      <div className="app">
+        <div className="header">
+          <h1>🤖 AI Assistant</h1>
+          <button onClick={clearChat} className="clear-btn">
+            Clear Chat
           </button>
+        </div>
+        
+        <div className="container">
+          <div className="chatbox" ref={chatboxRef}>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`message ${message.isUser ? 'user' : 'assistant'}`}
+              >
+                <div className="message-content">
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="message assistant">
+                <div className="message-content">
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="input-container">
+            <div className="input-wrapper">
+              <textarea
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message here... (Press Enter to send)"
+                disabled={isLoading}
+                rows="1"
+              />
+              <button 
+                onClick={handleSendMessage} 
+                disabled={isLoading || !inputValue.trim()}
+                className="send-btn"
+              >
+                ➤
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>
