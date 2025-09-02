@@ -1,6 +1,6 @@
 {
   "name": "md-ai-assistant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A modern dark-themed AI chatbot with sidebar chat management",
   "private": true,
   "scripts": {
