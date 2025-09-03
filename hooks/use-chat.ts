@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { getLiveData } from '../utils/live-data';
 
 export interface Message {
   id: number;
@@ -92,9 +93,39 @@ export function useChat() {
     
     setIsLoading(true);
 
-    const apiUrl = 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
-
     try {
+      // Check if we need live data first
+      const liveDataResult = await getLiveData(inputText);
+      
+      if (liveDataResult.shouldUseLiveData) {
+        if (liveDataResult.data) {
+          // Use live data instead of AI API
+          const assistantMessage: Message = { 
+            id: Date.now() + 1, 
+            text: liveDataResult.data, 
+            isUser: false 
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+          
+          // Update chat history with the new message
+          if (currentChatId) {
+            setChatHistory(prev => prev.map(chat => 
+              chat.id === currentChatId 
+                ? { ...chat, messages: [...chat.messages, assistantMessage] }
+                : chat
+            ));
+          }
+          return;
+        } else if (liveDataResult.error) {
+          // Show error but continue to AI API with enhanced prompt
+          const enhancedPrompt = `${inputText}\n\nNote: Please provide the most current information available. If you don't have recent data, please mention that your knowledge may be outdated.`;
+          inputText = enhancedPrompt;
+        }
+      }
+
+      // Fall back to AI API for other queries
+      const apiUrl = 'https://backend.buildpicoapps.com/aero/run/llm-api?pk=v1-Z0FBQUFBQm5HUEtMSjJkakVjcF9IQ0M0VFhRQ0FmSnNDSHNYTlJSblE0UXo1Q3RBcjFPcl9YYy1OZUhteDZWekxHdWRLM1M1alNZTkJMWEhNOWd4S1NPSDBTWC12M0U2UGc9PQ==';
+      
       // Build conversation context including previous messages
       const conversationPrompt = buildConversationContext(messages, inputText);
       
