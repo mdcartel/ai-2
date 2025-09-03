@@ -21,6 +21,7 @@ export default function Home() {
     sendMessage,
     newChat,
     selectChat,
+    clearAllChats,
   } = useChat();
 
   useEffect(() => {
@@ -46,6 +47,13 @@ export default function Home() {
     setSidebarOpen(false);
   };
 
+  const handleClearHistory = () => {
+    if (confirm('Are you sure you want to clear all chat history? This cannot be undone.')) {
+      clearAllChats();
+      setSidebarOpen(false);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -62,6 +70,7 @@ export default function Home() {
           chatHistory={chatHistory}
           currentChatId={currentChatId}
           onSelectChat={handleSelectChat}
+          onClearHistory={handleClearHistory}
         />
 
         <div className="flex flex-col min-w-0 flex-1">

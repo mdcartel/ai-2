@@ -12,6 +12,7 @@ interface SidebarProps {
   chatHistory: Array<{ id: string; title: string; timestamp: Date }>;
   currentChatId?: string | null;
   onSelectChat: (chatId: string) => void;
+  onClearHistory?: () => void;
 }
 
 export function Sidebar({ 
@@ -20,7 +21,8 @@ export function Sidebar({
   onNewChat, 
   chatHistory, 
   currentChatId, 
-  onSelectChat 
+  onSelectChat,
+  onClearHistory 
 }: SidebarProps) {
   return (
     <>
@@ -53,7 +55,7 @@ export function Sidebar({
           </div>
 
           {/* New Chat Button */}
-          <div className="p-4">
+          <div className="p-4 space-y-2">
             <Button 
               onClick={onNewChat}
               className="w-full justify-start gap-2"
@@ -62,6 +64,17 @@ export function Sidebar({
               <PlusIcon size={16} />
               New Chat
             </Button>
+            
+            {chatHistory.length > 0 && onClearHistory && (
+              <Button 
+                onClick={onClearHistory}
+                className="w-full justify-start gap-2 text-xs"
+                variant="ghost"
+                size="sm"
+              >
+                Clear History
+              </Button>
+            )}
           </div>
 
           {/* Chat History */}
