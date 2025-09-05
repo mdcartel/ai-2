@@ -12,7 +12,6 @@ A sleek, dark-themed AI chatbot built with Next.js and professional design compo
 - 🔒 **No Authentication** - Instant access without any setup
 - 🎭 **Smooth Animations** - Polished interactions with Framer Motion
 - 📝 **Markdown Support** - Rich text rendering for AI responses
-- 🎯 **MD Branding** - Custom MD icon replacing generic sparkles
 
 ## Design System
 
